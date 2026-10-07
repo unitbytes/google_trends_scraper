@@ -394,3 +394,13 @@ Need custom web data feeds, high-frequency scheduled runs, private cluster deplo
 - 📧 **Direct Email**: [contact@unitbytes.com](mailto:contact@unitbytes.com)
 - 🌐 **Enterprise Platform**: [https://unitbytes.com](https://unitbytes.com)
 - 💡 **Data Engine Specs & Live Docs**: [https://unitbytes.com/actors/google-trends-api/](https://unitbytes.com/actors/google-trends-api/)
+
+---
+
+## ⚖️ Disclaimer
+
+This repository and Actor are independent data extraction tools developed and maintained by UnitBytes. They are not affiliated with, endorsed by, sponsored by, or associated with Google LLC, Alphabet Inc., or any of their subsidiaries.
+
+"Google", "Google Trends", "YouTube", and related marks and logos are the registered trademarks of Google LLC and Alphabet Inc. All brand names, product trademarks, and registered logos mentioned belong to their respective owners.
+
+This tool extracts publicly available aggregate search volume indices and statistical interest metrics published by Google Trends for market research, SEO analysis, and spreadsheet intelligence. Users are solely responsible for ensuring that their data collection and usage practices comply with applicable local laws, regulations, and third-party terms of service.

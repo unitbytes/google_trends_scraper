@@ -1,0 +1,2 @@
+scrape_type,event_index,error,keyword,geo,geoName,value,max_value_index
+interest_by_region,1,False,Coffee,US-NY-501,New York NY,100,0

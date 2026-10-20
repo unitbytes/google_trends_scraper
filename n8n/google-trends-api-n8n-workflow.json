@@ -1,0 +1,253 @@
+{
+  "name": "Google Trends API: Real-Time & Historical Search Trends — Automated Extraction to CSV & Sheets (UnitBytes)",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## ⚡ Google Trends API: Real-Time & Historical Search Trends — Automated n8n Pipeline\n**Powered by [UnitBytes on Apify](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item)\n\n### ⚙️ How It Works\nThis workflow runs on a schedule, calls the **[google-trends-api Apify Actor](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io)** via its synchronous REST endpoint, normalizes the extracted fields (`scrape_type, event_index, error, keyword, geo`), and exports a clean CSV file.\n\n### 🚀 30-Second Setup Instructions\n1. **Get your free Apify API Token**: Open [google-trends-api on Apify Store](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io) and copy your API token from **Settings → Integrations**.\n2. **Paste your token & search parameters**: Double-click the **\"1. Set Apify Token & Input\"** node and replace `YOUR_APIFY_API_TOKEN` with your token.\n3. **Click \"Test Workflow\"**: The HTTP Request node calls the synchronous UnitBytes Apify endpoint, normalizes the extracted records, and exports a clean CSV file ready for Google Sheets, Airtable, Slack, or OpenAI.\n\n📖 **Documentation & Schema Reference**: [https://unitbytes.com/actors/google-trends-api/](https://unitbytes.com/actors/google-trends-api/)",
+        "height": 380,
+        "width": 520,
+        "color": 4
+      },
+      "id": "e04509f8-385d-5b4c-b816-5a358e70aa88",
+      "name": "Sticky Note — Setup Guide",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        180,
+        80
+      ]
+    },
+    {
+      "parameters": {
+        "content": "### 📊 Connect Your Destination\nThe **\"3. Normalize Output Fields\"** node outputs flat records (`scrape_type, event_index, error, keyword, geo`).\n\n- **Google Sheets / Airtable**: Connect a Google Sheets (`Append or Update Row`) node after Step 3.\n- **Slack / Telegram / Email Alerts**: Connect a Filter node + Slack node to alert your team on new deals or reviews.\n- **AI Agent / OpenAI**: Connect an OpenAI / LLM Chain node to summarize or classify extracted items.",
+        "height": 220,
+        "width": 420,
+        "color": 5
+      },
+      "id": "95c5b8e7-c846-52e7-bf20-83957b2bd37d",
+      "name": "Sticky Note — Destinations",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        880,
+        140
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        }
+      },
+      "id": "92f73336-f972-5f97-b62d-97a1c1703953",
+      "name": "Schedule Trigger",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        220,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e226011c-d236-5c4b-8830-dbcbdfb5587f",
+              "name": "apifyToken",
+              "value": "YOUR_APIFY_API_TOKEN",
+              "type": "string"
+            },
+            {
+              "id": "e862e0f8-3674-5922-b41b-f4c05f34eee1",
+              "name": "actorInput",
+              "value": "{\"keywords\": [\"OpenAI\", \"ChatGPT\"], \"custom_timeframe\": \"2023-01-01 2023-12-31\", \"common_geo\": \"US\"}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "852edf0d-9c53-5f68-a1d9-92dd06c67f82",
+      "name": "1. Set Apify Token & Input",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        460,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "=https://api.apify.com/v2/acts/unitbytes~google-trends-api/run-sync-get-dataset-items?token={{ $json.apifyToken }}&format=json&clean=true",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.actorInput) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "id": "03ecf45b-c9c1-5a35-8289-338dc7f6f1af",
+      "name": "2. Run UnitBytes (google-trends-api)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        700,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "dcebc6da-4cbf-5bfc-930b-161f9a440e10",
+              "name": "scrape_type",
+              "value": "={{ $json.scrape_type }}",
+              "type": "string"
+            },
+            {
+              "id": "e76bc8f1-793e-5bd1-a602-249c748c1485",
+              "name": "event_index",
+              "value": "={{ $json.event_index }}",
+              "type": "string"
+            },
+            {
+              "id": "58ff0ab1-d11c-5e84-82fa-9bb4f7a9e217",
+              "name": "error",
+              "value": "={{ $json.error }}",
+              "type": "string"
+            },
+            {
+              "id": "1f074b5b-75b6-5e68-8357-c88f4337e03c",
+              "name": "keyword",
+              "value": "={{ $json.keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "0f61a0d8-acf9-56c5-bdb3-a2042f35c3d0",
+              "name": "geo",
+              "value": "={{ $json.geo }}",
+              "type": "string"
+            },
+            {
+              "id": "3738ca83-939a-5b3d-8adb-9cfc4b070802",
+              "name": "geoName",
+              "value": "={{ $json.geoName }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "fc82ba9c-17f2-5e0c-927e-28bdcd89f013",
+      "name": "3. Normalize Output Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        940,
+        480
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "options": {
+          "fileName": "google-trends-api-dataset-export.csv"
+        }
+      },
+      "id": "596eaf6b-9439-5caa-9de5-a43c1d3073b9",
+      "name": "4. Export to CSV File",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1180,
+        480
+      ]
+    }
+  ],
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "1. Set Apify Token & Input",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Set Apify Token & Input": {
+      "main": [
+        [
+          {
+            "node": "2. Run UnitBytes (google-trends-api)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Run UnitBytes (google-trends-api)": {
+      "main": [
+        [
+          {
+            "node": "3. Normalize Output Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Normalize Output Fields": {
+      "main": [
+        [
+          {
+            "node": "4. Export to CSV File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "030f9420-0ca8-5240-8fe8-208e287a8b19"
+  },
+  "tags": [
+    {
+      "name": "Web Scraping"
+    },
+    {
+      "name": "Apify"
+    },
+    {
+      "name": "UnitBytes"
+    },
+    {
+      "name": "SEO & Market Trends"
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "scrape_type": "interest_over_time",
+    "event_index": 1,
+    "error": false,
+    "keyword": "AI",
+    "value": 92,
+    "date": "2026-09-02T00:00:00+00:00"
+  }
+]

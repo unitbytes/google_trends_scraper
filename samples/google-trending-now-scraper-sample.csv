@@ -1,0 +1,2 @@
+scrape_type,event_index,error,keyword,geo,volume,volume_growth_pct,topic_names,trend_keywords,started_timestamp,news
+trending_now,1,False,champions league draw,US,500000,1000,Sports,champions league draw | ucl draw | champions league fixtures,2026-10-24T06:00:00+00:00,"[{""title"": ""Champions League draw: Full fixtures and key matchups revealed"", ""source"": ""BBC Sport"", ""url"": ""https://www.bbc.com/sport/football/champions-league-highlights-2026"", ""time"": 1761285600}]"

@@ -1,0 +1,11 @@
+[
+  {
+    "scrape_type": "related_queries",
+    "event_index": 1,
+    "error": false,
+    "subset": "rising",
+    "original_keyword": "AI Agents",
+    "related_keyword": "claude code tutorial",
+    "value": 5000
+  }
+]

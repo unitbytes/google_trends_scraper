@@ -1,0 +1,28 @@
+[
+  {
+    "scrape_type": "trending_now",
+    "event_index": 1,
+    "error": false,
+    "keyword": "champions league draw",
+    "geo": "US",
+    "volume": 500000,
+    "volume_growth_pct": 1000,
+    "topic_names": [
+      "Sports"
+    ],
+    "trend_keywords": [
+      "champions league draw",
+      "ucl draw",
+      "champions league fixtures"
+    ],
+    "started_timestamp": "2026-10-24T06:00:00+00:00",
+    "news": [
+      {
+        "title": "Champions League draw: Full fixtures and key matchups revealed",
+        "source": "BBC Sport",
+        "url": "https://www.bbc.com/sport/football/champions-league-highlights-2026",
+        "time": 1761285600
+      }
+    ]
+  }
+]

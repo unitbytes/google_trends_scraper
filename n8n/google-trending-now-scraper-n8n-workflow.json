@@ -1,0 +1,639 @@
+{
+  "name": "Extract and score Google Trending Now & Realtime Trends Scraper data to Google Sheets, CSV, and Slack with Apify",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "## Google Trending Now & Realtime Trends Scraper — Automated Sheets, CSV & Slack Pipeline\n\nBuilt for market research, e-commerce, and growth teams. This workflow runs on a schedule to extract fresh data with the **[google-trending-now-scraper Apify Actor](https://apify.com/unitbytes/google-trending-now-scraper?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips previously seen records, scores each item, logs results to **Google Sheets** and **CSV**, and posts **Slack** alerts for top matches.\n\n### How it works\n1. **Every 6 Hours** triggers the run and loads search settings from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-trending-now-scraper)** executes the actor via Apify's synchronous endpoint.\n3. **3. Skip Seen Records** deduplicates items by `keyword` across runs.\n4. **4. Clean & Score Items** and **5. Map Export Fields** normalize fields (`keyword, volume, volume_growth_pct, geo, started_timestamp`) and compute a 0–100 `priorityScore`.\n5. **6a. Log to Google Sheets** and **6b. Export Backup CSV** store all rows, while **6c. Filter High-Priority Items** sends top matches to **7. Send Slack Alert**.\n\n### Setup\n1. Copy your API token from [google-trending-now-scraper on Apify Store](https://apify.com/unitbytes/google-trending-now-scraper?fpr=939u3w&fp_sid=n8n_io) into the **HTTP Header Auth** credential (`Authorization: Bearer <TOKEN>`) on node 2.\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in **1. Configure Search & Rules**.\n3. Connect **Google Sheets** and **Slack** credentials (or test immediately via CSV export).\n\n### Customization\n- Tune `minTrendValue` or `priorityKeyword` in node 1 to adjust Slack alert sensitivity.\n- Full schema reference: [https://unitbytes.com/actors/google-trending-now-scraper/](https://unitbytes.com/actors/google-trending-now-scraper/)",
+        "height": 760,
+        "width": 560,
+        "color": 1
+      },
+      "id": "c45335a3-4371-5841-9cd2-30e3407a3478",
+      "name": "Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        -640,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 1. Schedule & Search Settings\nTriggers on schedule and sets target search parameters, Google Sheets tab, and alert thresholds.",
+        "height": 380,
+        "width": 440,
+        "color": 7
+      },
+      "id": "3ab4c885-a7b6-5a19-b70a-0d386b714505",
+      "name": "Section 1 — Schedule & Settings",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        0,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 2. Extract & Deduplicate\nRuns the UnitBytes Apify Actor and skips records already processed in previous runs.",
+        "height": 380,
+        "width": 440,
+        "color": 7
+      },
+      "id": "620d464a-d65f-53a6-9dc7-1e444c6c490e",
+      "name": "Section 2 — Extract & Deduplicate",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        460,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 3. Clean, Score & Flatten\nNormalizes fields, parses numeric metrics, and calculates a 0–100 priority score.",
+        "height": 380,
+        "width": 440,
+        "color": 7
+      },
+      "id": "041d5f53-3ee8-5290-93d2-0e4f48d09926",
+      "name": "Section 3 — Clean, Score & Flatten",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        920,
+        60
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## 4. Sync to Sheets, CSV & Slack\nLogs all new records to Google Sheets and CSV, and routes high-priority matches to Slack.",
+        "height": 660,
+        "width": 540,
+        "color": 7
+      },
+      "id": "9b5babf2-06ae-5181-a3b7-277aeb3a1eb4",
+      "name": "Section 4 — Sheets, CSV & Slack",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1380,
+        -80
+      ]
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 6
+            }
+          ]
+        }
+      },
+      "id": "9b1a7c10-4abf-5c34-abe9-0ae682d3cc54",
+      "name": "Every 6 Hours",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        40,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "368712ba-631d-583e-8754-bdd1d065dd19",
+              "name": "actorInput",
+              "value": "{\"common_geo\": \"US\", \"trending_language\": \"en\", \"max_events\": 200, \"time_window\": \"24h\", \"output_format\": \"flat\", \"trending_hours\": 24}",
+              "type": "object"
+            },
+            {
+              "id": "0fb6bf15-dbcc-50e6-a2b4-7de37bab0e94",
+              "name": "sheetTab",
+              "value": "TrendSignals",
+              "type": "string"
+            },
+            {
+              "id": "468efdea-4cff-5db3-a410-050c97fb0167",
+              "name": "minTrendValue",
+              "value": 50,
+              "type": "number"
+            },
+            {
+              "id": "19db65bf-80f9-5182-9af5-eb94a81c89ea",
+              "name": "priorityKeyword",
+              "value": "",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d442f53b-7afa-5ccb-a6f1-23c627424991",
+      "name": "1. Configure Search & Rules",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        260,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.apify.com/v2/acts/unitbytes~google-trending-now-scraper/run-sync-get-dataset-items?format=json&clean=true",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify($json.actorInput) }}",
+        "options": {
+          "timeout": 300000
+        }
+      },
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "58e4a8b3-3798-5837-9e9c-c5513711f4d1",
+          "name": "Apify API Token (Header Auth)"
+        }
+      },
+      "id": "64256a4f-6b84-56dc-9574-90ee1c709a7c",
+      "name": "2. Run UnitBytes (google-trending-now-scraper)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [
+        500,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "removeItemsSeenInPreviousExecutions",
+        "dedupeValue": "={{ $json.keyword || $json.title }}",
+        "options": {}
+      },
+      "id": "9affe123-c83f-5e6a-a102-95fc1b52ea59",
+      "name": "3. Skip Seen Records",
+      "type": "n8n-nodes-base.removeDuplicates",
+      "typeVersion": 2,
+      "position": [
+        720,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "jsCode": "// Normalize fields, parse numeric metrics, and score items for Slack alerts\nconst config = $('1. Configure Search & Rules').first().json;\nconst threshold = Number(config.minTrendValue ?? 50);\nconst keywordFilter = String(config.priorityKeyword || '').trim().toLowerCase();\nconst primaryKeys = [\"keyword\", \"volume\", \"volume_growth_pct\", \"geo\", \"started_timestamp\", \"scrape_type\"];\n\nreturn $input.all().map((item) => {\n  const raw = item.json || {};\n  const cleaned = { ...raw };\n\n  for (const k of primaryKeys) {\n    if (typeof cleaned[k] === 'string') {\n      cleaned[k] = cleaned[k].replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  const recordId = String(cleaned.keyword || cleaned.id || cleaned.url || '');\n  const titleText = String(cleaned.title || cleaned.query || cleaned.business_name || cleaned.place_name || cleaned.placeName || cleaned.shopName || cleaned.reviewer_name || cleaned.contributor_name || cleaned.content || cleaned.body || cleaned.keyword || cleaned.original_keyword || cleaned.name || cleaned.sellerNick || recordId).slice(0, 180);\n  const itemUrl = String(cleaned.url || cleaned.review_url || cleaned.review_permalink || cleaned.photoUrl || cleaned.noteUrl || cleaned.shopUrl || cleaned.place_url || cleaned.google_maps_url || cleaned.website || cleaned.productUrl || cleaned.taobaoUrl || cleaned.resolved_url || cleaned.input_url || cleaned.contributor_url || '');\n  const rawMetric = cleaned.value || cleaned.volume || cleaned.volume_growth_pct || 0;\n  const numericValue = Number(String(rawMetric).replace(/[^0-9.-]/g, '')) || 0;\n\n  let priorityScore = 50;\n  let isHighPriority = false;\n  const mode = 'trends';\n\n  if (mode === 'price_deal') {\n    if (numericValue > 0 && numericValue <= threshold) {\n      priorityScore = Math.min(100, Math.round(70 + ((threshold - numericValue) / Math.max(threshold, 1)) * 30));\n      isHighPriority = true;\n    }\n  } else if (mode === 'review_sentiment') {\n    const stars = Number(cleaned.review_stars ?? cleaned.stars ?? cleaned.rating ?? numericValue);\n    if (cleaned.is_removed === true || cleaned.is_edited === true || cleaned.status === 'REMOVED' || (stars > 0 && stars <= threshold)) {\n      priorityScore = 95;\n      isHighPriority = true;\n    }\n  } else if (mode === 'lead_score') {\n    const hasDirectContact = Boolean(cleaned.primary_email || cleaned.phone);\n    if (numericValue >= threshold || hasDirectContact) {\n      priorityScore = Math.min(100, Math.max(numericValue, hasDirectContact ? 85 : 70));\n      isHighPriority = true;\n    }\n  } else if (mode === 'status_audit') {\n    if (cleaned.is_sold === true || cleaned.is_removed === true || cleaned.status === 'SOLD' || (numericValue > 0 && numericValue <= threshold)) {\n      priorityScore = 90;\n      isHighPriority = true;\n    }\n  } else {\n    if (numericValue >= threshold) {\n      priorityScore = Math.min(100, Math.round(70 + Math.min(numericValue / Math.max(threshold, 1), 3) * 10));\n      isHighPriority = true;\n    }\n  }\n\n  if (keywordFilter && titleText.toLowerCase().includes(keywordFilter)) {\n    priorityScore = Math.min(100, priorityScore + 20);\n    isHighPriority = true;\n  }\n\n  return {\n    json: {\n      ...cleaned,\n      recordId,\n      titleText,\n      itemUrl,\n      numericValue,\n      priorityScore,\n      isHighPriority,\n      alertSummary: `${titleText} (Metric: ${numericValue} | Score: ${priorityScore}/100)`,\n      scrapedAt: new Date().toISOString(),\n    },\n  };\n});"
+      },
+      "id": "cf4a9512-62f0-563f-9ef0-d92c620a3a3c",
+      "name": "4. Clean & Score Items",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        960,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "adac2f2c-a31c-5cea-9ea9-ca2503019685",
+              "name": "keyword",
+              "value": "={{ $json.keyword }}",
+              "type": "string"
+            },
+            {
+              "id": "3b01d5a8-0f79-5103-a782-d87060048d5e",
+              "name": "volume",
+              "value": "={{ $json.volume }}",
+              "type": "string"
+            },
+            {
+              "id": "e0361c1f-3371-5a4d-bbea-5326d4194514",
+              "name": "volume_growth_pct",
+              "value": "={{ $json.volume_growth_pct }}",
+              "type": "string"
+            },
+            {
+              "id": "7b0e2e39-f9d5-5cc7-a248-045965cc4361",
+              "name": "geo",
+              "value": "={{ $json.geo }}",
+              "type": "string"
+            },
+            {
+              "id": "dd8ab4c2-12a9-5a17-b61b-92764c98377d",
+              "name": "started_timestamp",
+              "value": "={{ $json.started_timestamp }}",
+              "type": "string"
+            },
+            {
+              "id": "a575f4ab-2cee-522e-91d1-539726300db2",
+              "name": "scrape_type",
+              "value": "={{ $json.scrape_type }}",
+              "type": "string"
+            },
+            {
+              "id": "19b25c1d-d30c-55f6-b8f1-83d1d9b38530",
+              "name": "numericValue",
+              "value": "={{ $json.numericValue }}",
+              "type": "number"
+            },
+            {
+              "id": "3fdcb340-61da-597c-afc4-d6024d99303a",
+              "name": "priorityScore",
+              "value": "={{ $json.priorityScore }}",
+              "type": "number"
+            },
+            {
+              "id": "3e935ea9-cb2b-54a6-83b4-094aa642ec94",
+              "name": "isHighPriority",
+              "value": "={{ $json.isHighPriority }}",
+              "type": "boolean"
+            },
+            {
+              "id": "11890efc-08a6-5678-95fe-d35c699ad9e6",
+              "name": "alertSummary",
+              "value": "={{ $json.alertSummary }}",
+              "type": "string"
+            },
+            {
+              "id": "7642a49d-60c2-561b-a6a2-a63fbdf2974f",
+              "name": "scrapedAt",
+              "value": "={{ $json.scrapedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "id": "91a1c79c-0d5d-5c50-9271-90e26878115d",
+      "name": "5. Map Export Fields",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1180,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "sheet",
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "sheetName": {
+          "__rl": true,
+          "mode": "name",
+          "value": "={{ $('1. Configure Search & Rules').first().json.sheetTab }}"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "keyword": "={{ $json.keyword }}",
+            "volume": "={{ $json.volume }}",
+            "volume_growth_pct": "={{ $json.volume_growth_pct }}",
+            "geo": "={{ $json.geo }}",
+            "started_timestamp": "={{ $json.started_timestamp }}",
+            "scrape_type": "={{ $json.scrape_type }}",
+            "numericValue": "={{ $json.numericValue }}",
+            "priorityScore": "={{ $json.priorityScore }}",
+            "isHighPriority": "={{ $json.isHighPriority }}",
+            "alertSummary": "={{ $json.alertSummary }}",
+            "scrapedAt": "={{ $json.scrapedAt }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "keyword",
+              "displayName": "keyword",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "volume",
+              "displayName": "volume",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "volume_growth_pct",
+              "displayName": "volume_growth_pct",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "geo",
+              "displayName": "geo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "started_timestamp",
+              "displayName": "started_timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scrape_type",
+              "displayName": "scrape_type",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "numericValue",
+              "displayName": "numericValue",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "priorityScore",
+              "displayName": "priorityScore",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "isHighPriority",
+              "displayName": "isHighPriority",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "alertSummary",
+              "displayName": "alertSummary",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "scrapedAt",
+              "displayName": "scrapedAt",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            }
+          ]
+        },
+        "options": {
+          "cellFormat": "RAW"
+        }
+      },
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "392f8733-93e7-5818-aa0c-b1fd35cc5d9c",
+          "name": "Google Sheets account"
+        }
+      },
+      "id": "f7640ea4-33d4-54c6-8436-d8ef2ecd0d5e",
+      "name": "6a. Log to Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        1440,
+        -20
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "csv",
+        "options": {
+          "fileName": "google-trending-now-scraper-dataset-export.csv"
+        }
+      },
+      "id": "e871af59-a3c7-58f1-9977-4f059472574b",
+      "name": "6b. Export Backup CSV",
+      "type": "n8n-nodes-base.convertToFile",
+      "typeVersion": 1.1,
+      "position": [
+        1440,
+        160
+      ]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "47edd4c7-5768-52be-9c46-b93f4487acb5",
+              "leftValue": "={{ $json.isHighPriority }}",
+              "rightValue": true,
+              "operator": {
+                "type": "boolean",
+                "operation": "true",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "22c014dc-dd81-5349-8f68-465a4aa9ba07",
+      "name": "6c. Filter High-Priority Items",
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.2,
+      "position": [
+        1440,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "post",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "mode": "list",
+          "value": ""
+        },
+        "messageType": "text",
+        "text": "=:bell: *New High-Priority Match (Google Trending Now & Realtime Trends Scraper)*\n*<{{ $json.itemUrl }}|{{ $json.titleText }}>*\n• *Priority Score:* {{ $json.priorityScore }}/100 ({{ $json.numericValue }})\n• *Record ID:* `{{ $json.recordId }}`\n• *Scraped At:* {{ $json.scrapedAt }}",
+        "otherOptions": {
+          "includeLinkToWorkflow": false,
+          "unfurl_links": false
+        }
+      },
+      "credentials": {
+        "slackApi": {
+          "id": "6c67b0db-bde1-5e74-9d67-b43b6bfdb500",
+          "name": "Slack account"
+        }
+      },
+      "id": "240ad975-e792-5a04-b7bd-9dc2a78af37c",
+      "name": "7. Send Slack Alert",
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1680,
+        360
+      ]
+    }
+  ],
+  "connections": {
+    "Every 6 Hours": {
+      "main": [
+        [
+          {
+            "node": "1. Configure Search & Rules",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "1. Configure Search & Rules": {
+      "main": [
+        [
+          {
+            "node": "2. Run UnitBytes (google-trending-now-scraper)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "2. Run UnitBytes (google-trending-now-scraper)": {
+      "main": [
+        [
+          {
+            "node": "3. Skip Seen Records",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "3. Skip Seen Records": {
+      "main": [
+        [
+          {
+            "node": "4. Clean & Score Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "4. Clean & Score Items": {
+      "main": [
+        [
+          {
+            "node": "5. Map Export Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "5. Map Export Fields": {
+      "main": [
+        [
+          {
+            "node": "6a. Log to Google Sheets",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6b. Export Backup CSV",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "6c. Filter High-Priority Items",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "6c. Filter High-Priority Items": {
+      "main": [
+        [
+          {
+            "node": "7. Send Slack Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "meta": {
+    "templateCredsSetupCompleted": false,
+    "instanceId": "030f9420-0ca8-5240-8fe8-208e287a8b19"
+  },
+  "tags": [
+    {
+      "name": "Web Scraping"
+    },
+    {
+      "name": "Apify"
+    },
+    {
+      "name": "UnitBytes"
+    },
+    {
+      "name": "SEO & Market Trends"
+    }
+  ]
+}

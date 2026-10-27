@@ -1,0 +1,2 @@
+scrape_type,keyword,gprop,geo,timeframe,date,value,is_partial,scraped_at
+interest_over_time,Air Fryer,froogle,US,today 12-m,2026-10-01,88,False,2026-10-20T12:00:00Z

@@ -1,0 +1,12 @@
+[
+  {
+    "scrape_type": "interest_by_region",
+    "event_index": 1,
+    "error": false,
+    "keyword": "Coffee",
+    "geo": "US-NY-501",
+    "geoName": "New York NY",
+    "value": 100,
+    "max_value_index": 0
+  }
+]

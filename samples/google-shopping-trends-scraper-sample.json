@@ -1,0 +1,13 @@
+[
+  {
+    "scrape_type": "interest_over_time",
+    "keyword": "Air Fryer",
+    "gprop": "froogle",
+    "geo": "US",
+    "timeframe": "today 12-m",
+    "date": "2026-10-01",
+    "value": 88,
+    "is_partial": false,
+    "scraped_at": "2026-10-20T12:00:00Z"
+  }
+]

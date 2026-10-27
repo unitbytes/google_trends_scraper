@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "unitbytes-apify": {
+      "type": "http",
+      "url": "https://mcp.apify.com/?tools=actors,docs,unitbytes/google-trends-scraper,unitbytes/google-trends-api,unitbytes/google-trending-now-scraper,unitbytes/youtube-trends-scraper,unitbytes/google-shopping-trends-scraper"
+    }
+  }
+}

@@ -10,7 +10,7 @@
 
 **Longitudinal Google Trends Historical Scraper (2004–present) and Python Data Science SDK Suite on Apify (`$0.30–$0.45 / 1,000 results`). Extract bulk 100+ keyword interest time series, DMA/metro/city sub-region breakdowns, breakout topics, YouTube search trends, and Google Shopping demand to JSON, CSV, Pandas, or n8n.**
 
-[**🚀 Try Live on Apify**](https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [**📓 Open in Google Colab**](https://colab.research.google.com/github/unitbytes/google_trends_scraper/blob/main/notebooks/quickstart.ipynb) • [**⚡ Official n8n Creator Hub**](https://n8n.io/creators/unitbytes/) • [**🔧 39 Free n8n Templates**](https://unitbytes.com/n8n/) • [**📖 Documentation & Schemas**](https://unitbytes.com/actors/) • [**📚 Engineering Playbooks**](https://unitbytes.com/blog/)
+[**🚀 Try Live on Apify**](https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [**📓 Open in Google Colab**](https://colab.research.google.com/github/unitbytes/google_trends_scraper/blob/main/notebooks/quickstart.ipynb) • [**⚡ Official n8n Creator Hub**](https://n8n.io/creators/unitbytes/) • [**🔧 41 Free n8n Templates**](https://unitbytes.com/n8n/) • [**📖 Documentation & Schemas**](https://unitbytes.com/actors/) • [**📚 Engineering Playbooks**](https://unitbytes.com/blog/)
 
 </div>
 
@@ -40,14 +40,14 @@ This repository contains ready-to-run **Python SDK scripts**, an **interactive 1
 | Extraction Engine | 🐍 Python SDK Quickstart | ⚡ n8n Workflow Template | 📊 Sample Output | 🚀 Cloud Console |
 | :--- | :--- | :--- | :---: | :---: |
 | **Google Trends Scraper & Data API**<br><sub>[`unitbytes/google-trends-scraper`](https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/google-trends-scraper/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_google_trends_scraper.py`](examples/run_google_trends_scraper.py) | [`n8n/google-trends-scraper-n8n-workflow.json`](n8n/google-trends-scraper-n8n-workflow.json) | [`JSON`](samples/google-trends-scraper-sample.json) · [`CSV`](samples/google-trends-scraper-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) |
-| **Google Trends API: Real-Time & Historical Data**<br><sub>[`unitbytes/google-trends-api`](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/google-trends-api/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_google_trends_api.py`](examples/run_google_trends_api.py) | [`n8n/google-trends-api-n8n-workflow.json`](n8n/google-trends-api-n8n-workflow.json) | [`JSON`](samples/google-trends-api-sample.json) · [`CSV`](samples/google-trends-api-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends) |
+| **Google Trends Scraper API: Interest, Regions & Queries**<br><sub>[`unitbytes/google-trends-api`](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/google-trends-api/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_google_trends_api.py`](examples/run_google_trends_api.py) | [`n8n/google-trends-api-n8n-workflow.json`](n8n/google-trends-api-n8n-workflow.json) | [`JSON`](samples/google-trends-api-sample.json) · [`CSV`](samples/google-trends-api-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends) |
 | **Google Trending Now & Realtime Trends Scraper**<br><sub>[`unitbytes/google-trending-now-scraper`](https://apify.com/unitbytes/google-trending-now-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/google-trending-now-scraper/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_google_trending_now_scraper.py`](examples/run_google_trending_now_scraper.py) | [`n8n/google-trending-now-scraper-n8n-workflow.json`](n8n/google-trending-now-scraper-n8n-workflow.json) | [`JSON`](samples/google-trending-now-scraper-sample.json) · [`CSV`](samples/google-trending-now-scraper-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/google-trending-now-scraper?fpr=939u3w&fp_sid=gh_gtrends) |
 | **YouTube Trends Scraper: Breakout Keywords & SEO**<br><sub>[`unitbytes/youtube-trends-scraper`](https://apify.com/unitbytes/youtube-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/youtube-trends-scraper/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_youtube_trends_scraper.py`](examples/run_youtube_trends_scraper.py) | [`n8n/youtube-trends-scraper-n8n-workflow.json`](n8n/youtube-trends-scraper-n8n-workflow.json) | [`JSON`](samples/youtube-trends-scraper-sample.json) · [`CSV`](samples/youtube-trends-scraper-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/youtube-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) |
 | **Google Shopping Trends Scraper: Product Demand**<br><sub>[`unitbytes/google-shopping-trends-scraper`](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) • [Full Schema](https://unitbytes.com/actors/google-shopping-trends-scraper/) • [Engineering Playbook](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)</sub> | [`examples/run_google_shopping_trends_scraper.py`](examples/run_google_shopping_trends_scraper.py) | [`n8n/google-shopping-trends-scraper-n8n-workflow.json`](n8n/google-shopping-trends-scraper-n8n-workflow.json) | [`JSON`](samples/google-shopping-trends-scraper-sample.json) · [`CSV`](samples/google-shopping-trends-scraper-sample.csv) | [⚡ **Run on Apify**](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends) |
 
 - 📓 **1-Click Interactive Google Colab Notebook:** Open [`notebooks/quickstart.ipynb`](notebooks/quickstart.ipynb) directly in your browser via [**Google Colab ↗**](https://colab.research.google.com/github/unitbytes/google_trends_scraper/blob/main/notebooks/quickstart.ipynb) to inspect sample DataFrames and test live API queries with zero local setup.
 - 🤖 **Cursor, Windsurf & Claude Code MCP Ready:** Includes [`.cursor/mcp.json`](.cursor/mcp.json) pre-configured with `https://mcp.apify.com` so AI coding agents can invoke these UnitBytes scrapers natively.
-- 💡 **Using n8n?** Explore our official creator profile at **[n8n.io/creators/unitbytes](https://n8n.io/creators/unitbytes/)** or copy all 39 pre-built 9-node scraping workflows (`Ctrl+V`) at **[unitbytes.com/n8n](https://unitbytes.com/n8n/)**.
+- 💡 **Using n8n?** Explore our official creator profile at **[n8n.io/creators/unitbytes](https://n8n.io/creators/unitbytes/)** or copy all 41 pre-built 9-node scraping workflows (`Ctrl+V`) at **[unitbytes.com/n8n](https://unitbytes.com/n8n/)**.
 - 📚 **Engineering Playbook:** Read **[PyTrends Is Dead (HTTP 429): Google Trends API Pricing & 2026 Alternatives (`$0.30/1K`)](https://unitbytes.com/blog/pytrends-alternative-google-trends-scraper-api-guide/)** or browse all scraping & automation guides at **[unitbytes.com/blog](https://unitbytes.com/blog/)**.
 <!-- UNITBYTES_REPO_KIT_END -->
 
@@ -93,7 +93,7 @@ Launch pre-configured extraction templates directly in the Apify Cloud Console w
 
 ### 🚀 Google Trends Scraper & Data API (`unitbytes/google-trends-scraper`)
 
-FASTEST & CHEAPEST (`$0.30 / 1k` results) — All-in-one Google Trends scraper & data API: Real-time search spikes, historical interest, geo heatmaps & rising queries across Web, YouTube & Shopping. Bulk keywords (up to 100), 1-click Excel/CSV or JSON.
+FASTEST & CHEAPEST (`$0.30 / 1k` results) — All-in-one Google Trends scraper & data API: Interest Over Time, Related & Breakout Queries (+5,000%), Regional Interest (State/City/DMA) & Related Topics across Web, YouTube & Shopping.
 
 - **Pricing:** `$0.00045 / item` (Pay-Per-Event — `$0.00045` result scraped (volume tiers from `$0.0003`))
 - **Cloud Console:** [https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends](https://apify.com/unitbytes/google-trends-scraper?fpr=939u3w&fp_sid=gh_gtrends)
@@ -114,6 +114,7 @@ FASTEST & CHEAPEST (`$0.30 / 1k` results) — All-in-one Google Trends scraper &
 | `scrape_type` | `string` | `interest_over_time` | Select the type of data to retrieve. 'All-in-One' extracts all 4 keyword datasets at once. 'Trending now' ignores keywords. |
 | `keywords` | `array` | `["OpenAI", "ChatGPT"]` | Enter the terms you want to analyze (up to 5 when comparing on a shared scale, or up to 100 when 'Compare Keywords' is unchecked). REQUIRED for all types EXCEPT 'Trending now'. |
 | `compare_keywords` | `boolean` | `True` | When enabled (default), up to 5 keywords are compared side-by-side on the same 0–100 scale. Uncheck to bulk-scrape large keyword lists (up to 100 keywords in one run), where each keyword is scored independently on its own 0–100 scale. |
+| `scrape_types` | `array` | — | Optionally specify multiple datasets to extract in one run (e.g. ['interest_over_time', 'related_queries']). Overrides 'Scrape Type' when provided. |
 | `trends_urls` | `array` | — | Optionally paste trends.google.com/trends/explore or /trending URLs directly. Automatically extracts keywords (q), country/region (geo), timeframe (date), and search property (gprop). |
 | `gprop` | `string` | `web` | Target specific Google search indexes: 'Google Shopping' for physical product demand, 'YouTube Search' for video creator trends, 'Image Search' for visual assets, 'News Search' for media spikes, or 'Web Search' (default). |
 | `category` | `integer` | `0` | Filter by Google Trends category ID (0 = All Categories, 3 = Arts & Entertainment, 5 = Computers & Electronics, 7 = Finance, 12 = Business & Industrial, 18 = Shopping, 45 = Health, 71 = Food & Drink). |
@@ -121,14 +122,13 @@ FASTEST & CHEAPEST (`$0.30 / 1k` results) — All-in-one Google Trends scraper &
 | `predefined_timeframe` | `string` | `today 12-m` | Select a standard time window. |
 | `custom_timeframe` | `string` | `2023-01-01 2023-12-31` | Format: 'YYYY-MM-DD YYYY-MM-DD'. Example: '2023-01-01 2023-12-31'. Leave empty if using Predefined. |
 | `geo_selection_type` | `string` | `Common Countries` | Choose how to specify the location. |
-| `common_geo` | `string` | `US` | Select the country code. |
-| `custom_geo_code` | `string` | — | Specific code like 'US-NY' (New York) or 'US-CA' (California). |
+| `common_geo` | `string` | `US` | 2-letter ISO country code (e.g. 'US', 'GB', 'DE', 'CA', 'IN'), full country name, or 'WORLDWIDE' for global search interest. |
+| `custom_geo_code` | `string` | — | Specific code like 'US-NY' (New York) or 'US-CA' (California). Leave empty for Worldwide when 'Custom Geo Code' is selected. |
 | `output_format` | `string` | `legacy` | Choose dataset output structure. 'legacy' preserves backward compatibility (single nested object). 'flat' outputs one record per data point (best for Excel, CSV, Google Sheets). |
 | `geo_resolution` | `string` | `COUNTRY` | Level of detail for 'Interest by region'. |
 | `inc_low_vol` | `boolean` | `False` | Get data even for regions with low search volume (slower). |
 | `trending_language` | `string` | `en` | Language for 'Trending now' scrape type. |
 | `trending_hours` | `integer` | `24` | Hours back for 'Trending now' (Max 191). |
-| `proxyConfiguration` | `object` | `{"useApifyProxy": true, "apifyProxyGroups": ["RE` | Crucial for avoiding Google blocks. Use Apify Proxy (Residential) for best results. |
 
 #### Python SDK Quickstart (`examples/run_google_trends_scraper.py`)
 ```python
@@ -182,9 +182,9 @@ Pricing starts at `$0.45` per 1,000 records (`$0.30/1K` on volume tiers), meanin
 
 ---
 
-### 🚀 Google Trends API: Real-Time & Historical Data (`unitbytes/google-trends-api`)
+### 🚀 Google Trends Scraper API: Interest, Regions & Queries (`unitbytes/google-trends-api`)
 
-Extract real-time Google search trends, historical keyword interest, regional demand, and related queries without rate limits. Supports bulk keywords (up to 100), all-in-one multi-dataset runs, and flat JSON for AI Agents & MCP.
+Google Trends Scraper API (`$0.30/1k`) for Interest Over Time, Breakout Related Queries (+5,000%), Regional Interest (State/Metro/City) & Related Topics across Web, YouTube & Shopping. Bulk up to 100 keywords, URL parsing, and flat JSON for AI Agents & MCP.
 
 - **Pricing:** `$0.00045 / item` (Pay-Per-Event — `$0.00045` result scraped (volume tiers from `$0.0003`))
 - **Cloud Console:** [https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_gtrends)
@@ -202,9 +202,10 @@ Extract real-time Google search trends, historical keyword interest, regional de
 
 | Parameter | Type | Default / Prefill | Description |
 | :--- | :---: | :--- | :--- |
-| `scrape_type` | `string` | `interest_over_time` | Select the type of data to retrieve. 'All-in-One' extracts all 4 keyword datasets at once. 'Trending now' ignores keywords. |
+| `scrape_type` | `string` | `all` | Select the type of data to retrieve. 'All-in-One' extracts all 4 keyword datasets at once. 'Trending now' ignores keywords. |
 | `keywords` | `array` | `["OpenAI", "ChatGPT"]` | Enter the terms you want to analyze (up to 5 when comparing on a shared scale, or up to 100 when 'Compare Keywords' is unchecked). REQUIRED for all types EXCEPT 'Trending now'. |
 | `compare_keywords` | `boolean` | `True` | When enabled (default), up to 5 keywords are compared side-by-side on the same 0–100 scale. Uncheck to bulk-scrape large keyword lists (up to 100 keywords in one run), where each keyword is scored independently on its own 0–100 scale. |
+| `scrape_types` | `array` | — | Optionally specify multiple datasets to extract in one run (e.g. ['interest_over_time', 'related_queries']). Overrides 'Scrape Type' when provided. |
 | `trends_urls` | `array` | — | Optionally paste trends.google.com/trends/explore or /trending URLs directly. Automatically extracts keywords (q), country/region (geo), timeframe (date), and search property (gprop). |
 | `gprop` | `string` | `web` | Target specific Google search indexes: 'Google Shopping' for physical product demand, 'YouTube Search' for video creator trends, 'Image Search' for visual assets, 'News Search' for media spikes, or 'Web Search' (default). |
 | `category` | `integer` | `0` | Filter by Google Trends category ID (0 = All Categories, 3 = Arts & Entertainment, 5 = Computers & Electronics, 7 = Finance, 12 = Business & Industrial, 18 = Shopping, 45 = Health, 71 = Food & Drink). |
@@ -212,14 +213,13 @@ Extract real-time Google search trends, historical keyword interest, regional de
 | `predefined_timeframe` | `string` | `today 12-m` | Select a standard time window. |
 | `custom_timeframe` | `string` | `2023-01-01 2023-12-31` | Format: 'YYYY-MM-DD YYYY-MM-DD'. Example: '2023-01-01 2023-12-31'. Leave empty if using Predefined. |
 | `geo_selection_type` | `string` | `Common Countries` | Choose how to specify the location. |
-| `common_geo` | `string` | `US` | Select the country code. |
-| `custom_geo_code` | `string` | — | Specific code like 'US-NY' (New York) or 'US-CA' (California). |
+| `common_geo` | `string` | `US` | 2-letter ISO country code (e.g. 'US', 'GB', 'DE', 'CA', 'IN'), full country name, or 'WORLDWIDE' for global search interest. |
+| `custom_geo_code` | `string` | — | Specific code like 'US-NY' (New York) or 'US-CA' (California). Leave empty for Worldwide when 'Custom Geo Code' is selected. |
 | `output_format` | `string` | `flat` | Choose dataset output structure. 'legacy' preserves backward compatibility (single nested object). 'flat' outputs one record per data point (best for Excel, CSV, Google Sheets). |
 | `geo_resolution` | `string` | `COUNTRY` | Level of detail for 'Interest by region'. |
 | `inc_low_vol` | `boolean` | `False` | Get data even for regions with low search volume (slower). |
 | `trending_language` | `string` | `en` | Language for 'Trending now' scrape type. |
 | `trending_hours` | `integer` | `24` | Hours back for 'Trending now' (Max 191). |
-| `proxyConfiguration` | `object` | `{"useApifyProxy": true, "apifyProxyGroups": ["RE` | Crucial for avoiding Google blocks. Use Apify Proxy (Residential) for best results. |
 
 #### Python SDK Quickstart (`examples/run_google_trends_api.py`)
 ```python
@@ -235,7 +235,7 @@ run_input = {
     "keywords": ["OpenAI", "ChatGPT"],
     "custom_timeframe": "2023-01-01 2023-12-31",
     "common_geo": "US",
-    "scrape_type": "interest_over_time",
+    "scrape_type": "all",
     "compare_keywords": True,
     "gprop": "web"
 }
@@ -606,6 +606,6 @@ Don't want to manage API tokens or scripts? **UnitBytes Data Delivery** provides
 
 - 🌐 **Request a Sample Dataset:** [https://unitbytes.com/#enterprise-intake](https://unitbytes.com/#enterprise-intake)
 - 📧 **Direct Engineering Contact:** [contact@unitbytes.com](mailto:contact@unitbytes.com)
-- ⚡ **Explore All 39 Scrapers:** [https://unitbytes.com/actors/](https://unitbytes.com/actors/)
+- ⚡ **Explore All 41 Scrapers:** [https://unitbytes.com/actors/](https://unitbytes.com/actors/)
 - 📚 **Engineering Playbooks & Guides:** [https://unitbytes.com/blog/](https://unitbytes.com/blog/)
 - 🔗 **Official n8n Creator Profile:** [https://n8n.io/creators/unitbytes/](https://n8n.io/creators/unitbytes/)

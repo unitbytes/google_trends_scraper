@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Google Trends API: Real-Time & Historical Data — Official Python SDK Quickstart
+Google Trends Scraper API: Interest, Regions & Queries — Official Python SDK Quickstart
 Actor: https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=gh_py
 Docs & Schema: https://unitbytes.com/actors/google-trends-api/
 n8n Template: https://unitbytes.com/n8n/workflows/google-trends-api-n8n-workflow.json
@@ -24,7 +24,7 @@ run_input = {
     "keywords": ["OpenAI", "ChatGPT"],
     "custom_timeframe": "2023-01-01 2023-12-31",
     "common_geo": "US",
-    "scrape_type": "interest_over_time",
+    "scrape_type": "all",
     "compare_keywords": True,
     "gprop": "web"
 }

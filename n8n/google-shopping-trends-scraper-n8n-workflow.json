@@ -1,10 +1,10 @@
 {
-  "name": "Extract and score Google Shopping Trends Scraper: Product Demand data to Google Sheets, CSV, and Slack with Apify",
+  "name": "Turn Google Shopping Trends Scraper: Product Demand breakout keywords into OpenAI content briefs in Sheets, Gmail, and Slack",
   "nodes": [
     {
       "parameters": {
-        "content": "## Google Shopping Trends Scraper: Product Demand — Automated Sheets, CSV & Slack Pipeline\n\nBuilt for market research, e-commerce, and growth teams. This workflow runs on a schedule to extract fresh data with the **[google-shopping-trends-scraper Apify Actor](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips previously seen records, scores each item, logs results to **Google Sheets** and **CSV**, and posts **Slack** alerts for top matches.\n\n### How it works\n1. **Every 6 Hours** triggers the run and loads search settings from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-shopping-trends-scraper)** executes the actor via Apify's synchronous endpoint.\n3. **3. Skip Seen Records** deduplicates items by `keyword` across runs.\n4. **4. Clean & Score Items** and **5. Map Export Fields** normalize fields (`keyword, date, value, geo, gprop`) and compute a 0–100 `priorityScore`.\n5. **6a. Log to Google Sheets** and **6b. Export Backup CSV** store all rows, while **6c. Filter High-Priority Items** sends top matches to **7. Send Slack Alert**.\n\n### Setup\n1. Copy your API token from [google-shopping-trends-scraper on Apify Store](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io) into the **HTTP Header Auth** credential (`Authorization: Bearer <TOKEN>`) on node 2.\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in **1. Configure Search & Rules**.\n3. Connect **Google Sheets** and **Slack** credentials (or test immediately via CSV export).\n\n### Customization\n- Tune `minTrendValue` or `priorityKeyword` in node 1 to adjust Slack alert sensitivity.\n- Full schema reference: [https://unitbytes.com/actors/google-shopping-trends-scraper/](https://unitbytes.com/actors/google-shopping-trends-scraper/)",
-        "height": 760,
+        "content": "## Google Shopping Trends Scraper: Product Demand — AI Co-Pilot & Multi-App Pipeline\n\nExtracts fresh data on a schedule with the **[google-shopping-trends-scraper Apify Actor](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips seen records, logs all rows to **Google Sheets** and **CSV**, and enriches top matches with **OpenAI (`gpt-4o-mini`)** for **Slack** and **Gmail**.\n\n### How it works\n1. **Every 6 Hours** loads rules from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-shopping-trends-scraper)** fetches data and **3. Skip Seen Records** deduplicates by `keyword`.\n3. **4. Clean & Score Items** and **5. Map Export Fields** normalize `keyword, date, value, geo` and compute `priorityScore`.\n4. **6a. Log to Google Sheets** and **6b. Export Backup CSV** save all rows, while **6c. Filter High-Priority Items** routes top matches to **7. AI SEO & Content Brief Strategist**.\n5. **8. Merge AI Content Strategy Brief** merges AI fields and triggers **9a. Send Breakout Trend Brief to Slack** and **9b. Draft Editorial Brief in Gmail**.\n\n### Setup\n1. Add your token from [google-shopping-trends-scraper on Apify Store](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io) to the **HTTP Header Auth** credential on node 2.\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in node 1.\n3. Connect **OpenAI**, **Google Sheets**, **Slack**, and **Gmail** credentials.\n\n### Customization\n- Adjust `minTrendValue` in node 1 or the prompt in node 7.\n- Docs: [https://unitbytes.com/actors/google-shopping-trends-scraper/](https://unitbytes.com/actors/google-shopping-trends-scraper/)",
+        "height": 780,
         "width": 560,
         "color": 1
       },
@@ -67,13 +67,13 @@
     },
     {
       "parameters": {
-        "content": "## 4. Sync to Sheets, CSV & Slack\nLogs all new records to Google Sheets and CSV, and routes high-priority matches to Slack.",
-        "height": 660,
-        "width": 540,
+        "content": "## 4. Sheets, CSV & AI Co-Pilot\nLogs all rows to Sheets and CSV, enriches high-priority items with OpenAI, and alerts teams.",
+        "height": 740,
+        "width": 980,
         "color": 7
       },
       "id": "cf837a99-79f2-5ee0-92bd-49ce347138d6",
-      "name": "Section 4 — Sheets, CSV & Slack",
+      "name": "Section 4 — Sheets, CSV & AI Co-Pilot",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
@@ -494,6 +494,131 @@
     },
     {
       "parameters": {
+        "resource": "text",
+        "operation": "message",
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "messages": {
+          "values": [
+            {
+              "content": "You are an SEO director and editorial trend strategist. Analyze the breakout search trend record and return a JSON object with exactly 4 keys: \"aiHeadline\" (high-CTR article or video headline for the breakout query), \"aiVerdict\" (one of: BREAKOUT_COMMERCIAL, BREAKOUT_TRANSACTIONAL, VIRAL_NEWS_SPIKE, EVERGREEN_GROWTH), \"aiAnalysis\" (1-sentence explanation of searcher intent and monetization angle), and \"aiDraftBody\" (a 3-bullet editorial content brief for the marketing team).",
+              "role": "system"
+            },
+            {
+              "content": "=Trend Signal ({{ $json.recordId }}):\nKeyword / Topic: {{ $json.titleText }}\nSearch Interest / Volume: {{ $json.numericValue }} (Priority: {{ $json.priorityScore }}/100)\nRaw Payload Summary: {{ JSON.stringify($json).slice(0, 1200) }}",
+              "role": "user"
+            }
+          ]
+        },
+        "jsonOutput": true,
+        "options": {
+          "temperature": 0.2
+        }
+      },
+      "credentials": {
+        "openAiApi": {
+          "id": "38607d58-01f6-572b-ab8d-7565c1d5beff",
+          "name": "OpenAI account"
+        }
+      },
+      "id": "36c87e0f-e5ce-5ec2-b37c-63c5281f3cf2",
+      "name": "7. AI SEO & Content Brief Strategist",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 1.8,
+      "position": [
+        1660,
+        360
+      ]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "36ab8204-f53a-5cc5-9bc9-02ad2cf43d27",
+              "name": "recordId",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.recordId }}",
+              "type": "string"
+            },
+            {
+              "id": "32e29a1f-fa61-5cc3-aaf5-c9d5f5c01aca",
+              "name": "titleText",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.titleText }}",
+              "type": "string"
+            },
+            {
+              "id": "897ce453-a50c-551d-88d4-7adbc3c3fda9",
+              "name": "itemUrl",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.itemUrl }}",
+              "type": "string"
+            },
+            {
+              "id": "fbb909ad-eb80-5937-b346-7c24ce986bc4",
+              "name": "numericValue",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.numericValue }}",
+              "type": "number"
+            },
+            {
+              "id": "af0a885b-6088-5e90-a58d-d2c26630fa30",
+              "name": "priorityScore",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.priorityScore }}",
+              "type": "number"
+            },
+            {
+              "id": "0d9b7d9e-7a5e-5302-8367-be8467e085a4",
+              "name": "recipientEmail",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.primary_email || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "03436667-e7cc-58ed-ac44-7a3dbb73d088",
+              "name": "aiHeadline",
+              "value": "={{ $json.message?.content?.aiHeadline || $json.aiHeadline || $('6c. Filter High-Priority Items').item.json.titleText }}",
+              "type": "string"
+            },
+            {
+              "id": "22c3eb2b-f097-5d04-af98-2e32de642388",
+              "name": "aiVerdict",
+              "value": "={{ $json.message?.content?.aiVerdict || $json.aiVerdict || 'HIGH_PRIORITY' }}",
+              "type": "string"
+            },
+            {
+              "id": "849b01ab-184f-5970-aef5-954bce132296",
+              "name": "aiAnalysis",
+              "value": "={{ $json.message?.content?.aiAnalysis || $json.aiAnalysis || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "0a7c7413-6dc6-5fbe-9538-e605055e0363",
+              "name": "aiDraftBody",
+              "value": "={{ $json.message?.content?.aiDraftBody || $json.aiDraftBody || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "ec020237-1856-5506-995a-7ec0c7c94cb5",
+              "name": "scrapedAt",
+              "value": "={{ $('6c. Filter High-Priority Items').item.json.scrapedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "7eb20c10-7d15-5d04-99e7-fa90918d0ba6",
+      "name": "8. Merge AI Content Strategy Brief",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1890,
+        360
+      ]
+    },
+    {
+      "parameters": {
         "resource": "message",
         "operation": "post",
         "select": "channel",
@@ -503,7 +628,7 @@
           "value": ""
         },
         "messageType": "text",
-        "text": "=:bell: *New High-Priority Match (Google Shopping Trends Scraper: Product Demand)*\n*<{{ $json.itemUrl }}|{{ $json.titleText }}>*\n• *Priority Score:* {{ $json.priorityScore }}/100 ({{ $json.numericValue }})\n• *Record ID:* `{{ $json.recordId }}`\n• *Scraped At:* {{ $json.scrapedAt }}",
+        "text": "=:robot_face: *AI Co-Pilot Match (Google Shopping Trends Scraper: Product Demand)*\n*<{{ $json.itemUrl }}|{{ $json.aiHeadline }}>*\n• *AI Verdict:* `{{ $json.aiVerdict }}` | *Priority Score:* {{ $json.priorityScore }}/100 (Metric: {{ $json.numericValue }})\n• *AI Analysis:* {{ $json.aiAnalysis }}\n• *Suggested Action / Draft:* {{ $json.aiDraftBody }}\n• *Record ID:* `{{ $json.recordId }}`",
         "otherOptions": {
           "includeLinkToWorkflow": false,
           "unfurl_links": false
@@ -516,12 +641,37 @@
         }
       },
       "id": "1d9b327b-d808-5e17-944c-aad66b1c164e",
-      "name": "7. Send Slack Alert",
+      "name": "9a. Send Breakout Trend Brief to Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
       "position": [
-        1680,
-        360
+        2120,
+        260
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "draft",
+        "operation": "create",
+        "subject": "=[AI Action] {{ $json.aiVerdict }}: {{ $json.aiHeadline }}",
+        "message": "={{ $json.aiDraftBody }}\n\n---\nAI Analysis: {{ $json.aiAnalysis }}\nSource Link: {{ $json.itemUrl }}\nPriority Score: {{ $json.priorityScore }}/100",
+        "options": {
+          "sendTo": "={{ $json.recipientEmail }}"
+        }
+      },
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "3f9501e5-e668-5a63-9b3e-2969fb1a7175",
+          "name": "Gmail account"
+        }
+      },
+      "id": "eb10dd9f-c145-54c7-9a1f-e001eee272b1",
+      "name": "9b. Draft Editorial Brief in Gmail",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2120,
+        480
       ]
     }
   ],
@@ -606,7 +756,34 @@
       "main": [
         [
           {
-            "node": "7. Send Slack Alert",
+            "node": "7. AI SEO & Content Brief Strategist",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "7. AI SEO & Content Brief Strategist": {
+      "main": [
+        [
+          {
+            "node": "8. Merge AI Content Strategy Brief",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "8. Merge AI Content Strategy Brief": {
+      "main": [
+        [
+          {
+            "node": "9a. Send Breakout Trend Brief to Slack",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "9b. Draft Editorial Brief in Gmail",
             "type": "main",
             "index": 0
           }
@@ -624,13 +801,16 @@
   },
   "tags": [
     {
+      "name": "AI"
+    },
+    {
+      "name": "OpenAI"
+    },
+    {
       "name": "Web Scraping"
     },
     {
       "name": "Apify"
-    },
-    {
-      "name": "UnitBytes"
     },
     {
       "name": "SEO & Market Trends"

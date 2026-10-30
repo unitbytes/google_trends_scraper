@@ -1,9 +1,9 @@
 {
-  "name": "Turn Google Shopping Trends Scraper: Product Demand breakout keywords into OpenAI content briefs in Sheets, Gmail, and Slack",
+  "name": "Turn Google Shopping product trends into OpenAI merchandising briefs in Sheets, Gmail, and Slack",
   "nodes": [
     {
       "parameters": {
-        "content": "## Google Shopping Trends Scraper: Product Demand — AI Co-Pilot & Multi-App Pipeline\n\nExtracts fresh data on a schedule with the **[google-shopping-trends-scraper Apify Actor](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips seen records, logs all rows to **Google Sheets** and **CSV**, and enriches top matches with **OpenAI (`gpt-4o-mini`)** for **Slack** and **Gmail**.\n\n### How it works\n1. **Every 6 Hours** loads rules from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-shopping-trends-scraper)** fetches data and **3. Skip Seen Records** deduplicates by `keyword`.\n3. **4. Clean & Score Items** and **5. Map Export Fields** normalize `keyword, date, value, geo` and compute `priorityScore`.\n4. **6a. Log to Google Sheets** and **6b. Export Backup CSV** save all rows, while **6c. Filter High-Priority Items** routes top matches to **7. AI SEO & Content Brief Strategist**.\n5. **8. Merge AI Content Strategy Brief** merges AI fields and triggers **9a. Send Breakout Trend Brief to Slack** and **9b. Draft Editorial Brief in Gmail**.\n\n### Setup\n1. Add your token from [google-shopping-trends-scraper on Apify Store](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io) to the **HTTP Header Auth** credential on node 2.\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in node 1.\n3. Connect **OpenAI**, **Google Sheets**, **Slack**, and **Gmail** credentials.\n\n### Customization\n- Adjust `minTrendValue` in node 1 or the prompt in node 7.\n- Docs: [https://unitbytes.com/actors/google-shopping-trends-scraper/](https://unitbytes.com/actors/google-shopping-trends-scraper/)",
+        "content": "## Google Shopping Trends Scraper: Product Demand — AI Co-Pilot & Multi-App Pipeline\n\nExtracts fresh data on a schedule with the **[google-shopping-trends-scraper Apify Actor](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips seen records, logs all rows to **Google Sheets** and **CSV**, and enriches top matches with **OpenAI (`gpt-4o-mini`)** for **Slack** and **Gmail**.\n\n### How it works\n1. **Every 6 Hours** loads rules from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-shopping-trends-scraper)** fetches data and **3. Skip Seen Records** deduplicates by `keyword`.\n3. **4. Clean & Score Items** and **5. Map Export Fields** normalize `keyword, date, value, geo` and compute `priorityScore`.\n4. **6a. Log to Google Sheets** and **6b. Export Backup CSV** save all rows, while **6c. Filter High-Priority Items** routes top matches to **7. AI SEO & Content Brief Strategist**.\n5. **8. Merge AI Content Strategy Brief** merges AI fields and triggers **9a. Send Breakout Trend Brief to Slack** and **9b. Draft Editorial Brief in Gmail**.\n\n### Setup\n1. Add your token from [google-shopping-trends-scraper on Apify Store](https://apify.com/unitbytes/google-shopping-trends-scraper?fpr=939u3w&fp_sid=n8n_io) to the **HTTP Header Auth** credential on node 2 (`Name`: `Authorization`, `Value`: `Bearer <YOUR_APIFY_TOKEN>`).\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in node 1.\n3. Connect **OpenAI**, **Google Sheets**, **Slack**, and **Gmail** credentials.\n\n### Customization\n- Adjust `minTrendValue` in node 1 or the prompt in node 7.\n- Docs: [https://unitbytes.com/actors/google-shopping-trends-scraper/](https://unitbytes.com/actors/google-shopping-trends-scraper/)",
         "height": 780,
         "width": 560,
         "color": 1
@@ -159,7 +159,7 @@
         },
         "sendBody": true,
         "specifyBody": "json",
-        "jsonBody": "={{ JSON.stringify($json.actorInput) }}",
+        "jsonBody": "={{ typeof $json.actorInput === 'string' ? $json.actorInput : JSON.stringify($json.actorInput) }}",
         "options": {
           "timeout": 300000
         }
@@ -196,7 +196,7 @@
     },
     {
       "parameters": {
-        "jsCode": "// Normalize fields, parse numeric metrics, and score items for Slack alerts\nconst config = $('1. Configure Search & Rules').first().json;\nconst threshold = Number(config.minTrendValue ?? 50);\nconst keywordFilter = String(config.priorityKeyword || '').trim().toLowerCase();\nconst primaryKeys = [\"keyword\", \"date\", \"value\", \"geo\", \"gprop\", \"scrape_type\"];\n\nreturn $input.all().map((item) => {\n  const raw = item.json || {};\n  const cleaned = { ...raw };\n\n  for (const k of primaryKeys) {\n    if (typeof cleaned[k] === 'string') {\n      cleaned[k] = cleaned[k].replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  const recordId = String(cleaned.keyword || cleaned.id || cleaned.url || '');\n  const titleText = String(cleaned.title || cleaned.query || cleaned.business_name || cleaned.place_name || cleaned.placeName || cleaned.shopName || cleaned.reviewer_name || cleaned.contributor_name || cleaned.content || cleaned.body || cleaned.keyword || cleaned.original_keyword || cleaned.name || cleaned.sellerNick || recordId).slice(0, 180);\n  const itemUrl = String(cleaned.url || cleaned.review_url || cleaned.review_permalink || cleaned.photoUrl || cleaned.noteUrl || cleaned.shopUrl || cleaned.place_url || cleaned.google_maps_url || cleaned.website || cleaned.productUrl || cleaned.taobaoUrl || cleaned.resolved_url || cleaned.input_url || cleaned.contributor_url || '');\n  const rawMetric = cleaned.value || cleaned.volume || cleaned.volume_growth_pct || 0;\n  const numericValue = Number(String(rawMetric).replace(/[^0-9.-]/g, '')) || 0;\n\n  let priorityScore = 50;\n  let isHighPriority = false;\n  const mode = 'trends';\n\n  if (mode === 'price_deal') {\n    if (numericValue > 0 && numericValue <= threshold) {\n      priorityScore = Math.min(100, Math.round(70 + ((threshold - numericValue) / Math.max(threshold, 1)) * 30));\n      isHighPriority = true;\n    }\n  } else if (mode === 'review_sentiment') {\n    const stars = Number(cleaned.review_stars ?? cleaned.stars ?? cleaned.rating ?? numericValue);\n    if (cleaned.is_removed === true || cleaned.is_edited === true || cleaned.status === 'REMOVED' || (stars > 0 && stars <= threshold)) {\n      priorityScore = 95;\n      isHighPriority = true;\n    }\n  } else if (mode === 'lead_score') {\n    const hasDirectContact = Boolean(cleaned.primary_email || cleaned.phone);\n    if (numericValue >= threshold || hasDirectContact) {\n      priorityScore = Math.min(100, Math.max(numericValue, hasDirectContact ? 85 : 70));\n      isHighPriority = true;\n    }\n  } else if (mode === 'status_audit') {\n    if (cleaned.is_sold === true || cleaned.is_removed === true || cleaned.status === 'SOLD' || (numericValue > 0 && numericValue <= threshold)) {\n      priorityScore = 90;\n      isHighPriority = true;\n    }\n  } else {\n    if (numericValue >= threshold) {\n      priorityScore = Math.min(100, Math.round(70 + Math.min(numericValue / Math.max(threshold, 1), 3) * 10));\n      isHighPriority = true;\n    }\n  }\n\n  if (keywordFilter && titleText.toLowerCase().includes(keywordFilter)) {\n    priorityScore = Math.min(100, priorityScore + 20);\n    isHighPriority = true;\n  }\n\n  return {\n    json: {\n      ...cleaned,\n      recordId,\n      titleText,\n      itemUrl,\n      numericValue,\n      priorityScore,\n      isHighPriority,\n      alertSummary: `${titleText} (Metric: ${numericValue} | Score: ${priorityScore}/100)`,\n      scrapedAt: new Date().toISOString(),\n    },\n  };\n});"
+        "jsCode": "// Normalize fields, parse numeric metrics, and score items for AI enrichment\nconst config = $('1. Configure Search & Rules').first().json;\nconst threshold = Number(config.minTrendValue !== undefined ? config.minTrendValue : 50);\nconst keywordFilter = String(config.priorityKeyword || '').trim().toLowerCase();\nconst primaryKeys = [\"keyword\", \"date\", \"value\", \"geo\", \"gprop\", \"scrape_type\"];\n\nreturn $input.all().map((item) => {\n  const raw = item.json || {};\n  const cleaned = { ...raw };\n\n  for (const k of primaryKeys) {\n    if (typeof cleaned[k] === 'string') {\n      cleaned[k] = cleaned[k].replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  const recordId = String(cleaned.keyword || cleaned.id || cleaned.url || '');\n  const titleText = String(cleaned.keyword || recordId).slice(0, 180);\n  const itemUrl = String(cleaned.url || '');\n  const rawMetric = cleaned.value || cleaned.volume || cleaned.volume_growth_pct || 0;\n  const numericValue = Number(String(rawMetric).replace(/[^0-9.-]/g, '')) || 0;\n\n  let priorityScore = 50;\n  let isHighPriority = false;\n\n  if (numericValue >= threshold) {\n    priorityScore = Math.min(100, Math.round(70 + Math.min(numericValue / Math.max(threshold, 1), 3) * 10));\n    isHighPriority = true;\n  }\n\n  if (keywordFilter && titleText.toLowerCase().includes(keywordFilter)) {\n    priorityScore = Math.min(100, priorityScore + 20);\n    isHighPriority = true;\n  }\n\n  return {\n    json: {\n      ...cleaned,\n      recordId,\n      titleText,\n      itemUrl,\n      numericValue,\n      priorityScore,\n      isHighPriority,\n      alertSummary: titleText + ' (Metric: ' + numericValue + ' | Score: ' + priorityScore + '/100)',\n      scrapedAt: new Date().toISOString(),\n    },\n  };\n});"
       },
       "id": "82423f11-dfbc-50a6-8952-4bb0eee2b4dd",
       "name": "4. Clean & Score Items",
@@ -214,67 +214,67 @@
             {
               "id": "0a128c67-99ef-59e1-95d6-70aa56977210",
               "name": "keyword",
-              "value": "={{ $json.keyword }}",
+              "value": "={{ $json.keyword !== undefined && $json.keyword !== null ? $json.keyword : '' }}",
               "type": "string"
             },
             {
               "id": "000a8e59-32bc-5f81-8860-f0866149205e",
               "name": "date",
-              "value": "={{ $json.date }}",
+              "value": "={{ $json.date !== undefined && $json.date !== null ? $json.date : '' }}",
               "type": "string"
             },
             {
               "id": "1b76acfa-27b3-5451-83b8-51d5506dbad8",
               "name": "value",
-              "value": "={{ $json.value }}",
+              "value": "={{ $json.value !== undefined && $json.value !== null ? $json.value : '' }}",
               "type": "string"
             },
             {
               "id": "28161246-425f-5c00-bbdb-98ae08362729",
               "name": "geo",
-              "value": "={{ $json.geo }}",
+              "value": "={{ $json.geo !== undefined && $json.geo !== null ? $json.geo : '' }}",
               "type": "string"
             },
             {
               "id": "c5df75df-9c74-58a2-85ed-7a078bf87d4c",
               "name": "gprop",
-              "value": "={{ $json.gprop }}",
+              "value": "={{ $json.gprop !== undefined && $json.gprop !== null ? $json.gprop : '' }}",
               "type": "string"
             },
             {
               "id": "ebc3c6f6-99d7-517d-8845-8d21805633dc",
               "name": "scrape_type",
-              "value": "={{ $json.scrape_type }}",
+              "value": "={{ $json.scrape_type !== undefined && $json.scrape_type !== null ? $json.scrape_type : '' }}",
               "type": "string"
             },
             {
               "id": "39f65a11-f087-5701-8c44-752875f16f0c",
               "name": "numericValue",
-              "value": "={{ $json.numericValue }}",
+              "value": "={{ Number($json.numericValue || 0) }}",
               "type": "number"
             },
             {
               "id": "d68139a3-a1c3-54e9-8cef-2f306acc0ea9",
               "name": "priorityScore",
-              "value": "={{ $json.priorityScore }}",
+              "value": "={{ Number($json.priorityScore || 0) }}",
               "type": "number"
             },
             {
               "id": "d4c0539d-9d2d-50f2-bf2a-c40c3e3c8673",
               "name": "isHighPriority",
-              "value": "={{ $json.isHighPriority }}",
+              "value": "={{ Boolean($json.isHighPriority) }}",
               "type": "boolean"
             },
             {
               "id": "3b5caff4-f4fe-5ed1-970f-8fe211894142",
               "name": "alertSummary",
-              "value": "={{ $json.alertSummary }}",
+              "value": "={{ $json.alertSummary !== undefined && $json.alertSummary !== null ? $json.alertSummary : '' }}",
               "type": "string"
             },
             {
               "id": "475023af-2a50-556b-909e-00e673c2d586",
               "name": "scrapedAt",
-              "value": "={{ $json.scrapedAt }}",
+              "value": "={{ $json.scrapedAt !== undefined && $json.scrapedAt !== null ? $json.scrapedAt : '' }}",
               "type": "string"
             }
           ]
@@ -308,17 +308,17 @@
         "columns": {
           "mappingMode": "defineBelow",
           "value": {
-            "keyword": "={{ $json.keyword }}",
-            "date": "={{ $json.date }}",
-            "value": "={{ $json.value }}",
-            "geo": "={{ $json.geo }}",
-            "gprop": "={{ $json.gprop }}",
-            "scrape_type": "={{ $json.scrape_type }}",
-            "numericValue": "={{ $json.numericValue }}",
-            "priorityScore": "={{ $json.priorityScore }}",
-            "isHighPriority": "={{ $json.isHighPriority }}",
-            "alertSummary": "={{ $json.alertSummary }}",
-            "scrapedAt": "={{ $json.scrapedAt }}"
+            "keyword": "={{ $json.keyword !== undefined && $json.keyword !== null ? $json.keyword : '' }}",
+            "date": "={{ $json.date !== undefined && $json.date !== null ? $json.date : '' }}",
+            "value": "={{ $json.value !== undefined && $json.value !== null ? $json.value : '' }}",
+            "geo": "={{ $json.geo !== undefined && $json.geo !== null ? $json.geo : '' }}",
+            "gprop": "={{ $json.gprop !== undefined && $json.gprop !== null ? $json.gprop : '' }}",
+            "scrape_type": "={{ $json.scrape_type !== undefined && $json.scrape_type !== null ? $json.scrape_type : '' }}",
+            "numericValue": "={{ $json.numericValue !== undefined && $json.numericValue !== null ? $json.numericValue : '' }}",
+            "priorityScore": "={{ $json.priorityScore !== undefined && $json.priorityScore !== null ? $json.priorityScore : '' }}",
+            "isHighPriority": "={{ $json.isHighPriority !== undefined && $json.isHighPriority !== null ? $json.isHighPriority : '' }}",
+            "alertSummary": "={{ $json.alertSummary !== undefined && $json.alertSummary !== null ? $json.alertSummary : '' }}",
+            "scrapedAt": "={{ $json.scrapedAt !== undefined && $json.scrapedAt !== null ? $json.scrapedAt : '' }}"
           },
           "matchingColumns": [],
           "schema": [
@@ -577,25 +577,25 @@
             {
               "id": "03436667-e7cc-58ed-ac44-7a3dbb73d088",
               "name": "aiHeadline",
-              "value": "={{ $json.message?.content?.aiHeadline || $json.aiHeadline || $('6c. Filter High-Priority Items').item.json.titleText }}",
+              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiHeadline || $('6c. Filter High-Priority Items').item.json.titleText }}",
               "type": "string"
             },
             {
               "id": "22c3eb2b-f097-5d04-af98-2e32de642388",
               "name": "aiVerdict",
-              "value": "={{ $json.message?.content?.aiVerdict || $json.aiVerdict || 'HIGH_PRIORITY' }}",
+              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiVerdict || 'HIGH_PRIORITY' }}",
               "type": "string"
             },
             {
               "id": "849b01ab-184f-5970-aef5-954bce132296",
               "name": "aiAnalysis",
-              "value": "={{ $json.message?.content?.aiAnalysis || $json.aiAnalysis || '' }}",
+              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiAnalysis || '' }}",
               "type": "string"
             },
             {
               "id": "0a7c7413-6dc6-5fbe-9538-e605055e0363",
               "name": "aiDraftBody",
-              "value": "={{ $json.message?.content?.aiDraftBody || $json.aiDraftBody || '' }}",
+              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiDraftBody || '' }}",
               "type": "string"
             },
             {
@@ -655,9 +655,7 @@
         "operation": "create",
         "subject": "=[AI Action] {{ $json.aiVerdict }}: {{ $json.aiHeadline }}",
         "message": "={{ $json.aiDraftBody }}\n\n---\nAI Analysis: {{ $json.aiAnalysis }}\nSource Link: {{ $json.itemUrl }}\nPriority Score: {{ $json.priorityScore }}/100",
-        "options": {
-          "sendTo": "={{ $json.recipientEmail }}"
-        }
+        "options": {}
       },
       "credentials": {
         "gmailOAuth2": {

@@ -3,82 +3,113 @@
   "nodes": [
     {
       "parameters": {
-        "content": "## Google Trends Scraper API: Interest, Regions & Queries — AI Co-Pilot & Multi-App Pipeline\n\nExtracts fresh data on a schedule with the **[google-trends-api Apify Actor](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io)** ($0.00045 / item), skips seen records, logs all rows to **Google Sheets** and **CSV**, and enriches top matches with **OpenAI (`gpt-4o-mini`)** for **Slack** and **Gmail**.\n\n### How it works\n1. **Every 6 Hours** loads rules from **1. Configure Search & Rules**.\n2. **2. Run UnitBytes (google-trends-api)** fetches data and **3. Skip Seen Records** deduplicates by `keyword`.\n3. **4. Clean & Score Items** and **5. Map Export Fields** normalize `keyword, value, geo, scrape_type` and compute `priorityScore`.\n4. **6a. Log to Google Sheets** and **6b. Export Backup CSV** save all rows, while **6c. Filter High-Priority Items** routes top matches to **7. AI SEO & Content Brief Strategist**.\n5. **8. Merge AI Content Strategy Brief** merges AI fields and triggers **9a. Send Breakout Trend Brief to Slack** and **9b. Draft Editorial Brief in Gmail**.\n\n### Setup\n1. Add your token from [google-trends-api on Apify Store](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io) to the **HTTP Header Auth** credential on node 2 (`Name`: `Authorization`, `Value`: `Bearer <YOUR_APIFY_TOKEN>`).\n2. Edit `actorInput`, `sheetTab`, and `minTrendValue` in node 1.\n3. Connect **OpenAI**, **Google Sheets**, **Slack**, and **Gmail** credentials.\n\n### Customization\n- Adjust `minTrendValue` in node 1 or the prompt in node 7.\n- Docs: [https://unitbytes.com/actors/google-trends-api/](https://unitbytes.com/actors/google-trends-api/)",
-        "height": 780,
-        "width": 560,
-        "color": 1
+        "content": "## Turn Google Trends breakout keywords into OpenAI content briefs in Sheets, Gmail, and Slack\n\n### How it works\n\nThis workflow runs every six hours to extract fresh records through the **[google-trends-api](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io)** UnitBytes Apify actor ($0.00045 / item), remove previously seen items by `keyword`, and normalize and score the dataset (`keyword, value, geo, scrape_type`). It maps the cleaned fields for export, logs all rows to **Google Sheets**, creates a backup **CSV** file, and sends only high-priority records into **OpenAI (`gpt-4o-mini`)** for structured analysis and action drafting. The enriched fields are then merged and delivered to **Slack** and **Gmail**.\n\n### Setup steps\n\n- Configure the schedule interval in **When Every 6 Hours** if six hours is not ideal for your cadence.\n- Add your Apify API token from [google-trends-api on Apify Store](https://apify.com/unitbytes/google-trends-api?fpr=939u3w&fp_sid=n8n_io) (`Authorization: Bearer <YOUR_APIFY_TOKEN>`) in **Post to Google Trends Scraper API: Interest, Regions & Queries API** and confirm `actorInput` in **Set Search Parameters**.\n- Connect **Google Sheets** credentials in **Append Data to Sheets** and select your destination spreadsheet.\n- Configure **OpenAI** credentials in **AI SEO and Content Brief Strategist** and review the `gpt-4o-mini` system prompt.\n- Connect **Slack** and **Gmail** credentials on the final delivery nodes.\n- Review `minTrendValue` and `priorityKeyword` in **Set Search Parameters** before activating.\n\n### Customization\n\nAdjust `actorInput`, `minTrendValue`, `priorityKeyword`, the OpenAI prompt, Slack message formatting, and Gmail template fields to match your workflow. Full schema and input docs: [https://unitbytes.com/actors/google-trends-api/](https://unitbytes.com/actors/google-trends-api/)",
+        "width": 480,
+        "height": 896
       },
       "id": "a8884979-76d5-5db5-9dbc-ee518cdf7c7c",
-      "name": "Overview",
+      "name": "Sticky Note",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        -640,
-        -80
+        -560,
+        -288
       ]
     },
     {
       "parameters": {
-        "content": "## 1. Schedule & Search Settings\nTriggers on schedule and sets target search parameters, Google Sheets tab, and alert thresholds.",
-        "height": 380,
-        "width": 440,
+        "content": "## Schedule search rules\n\nStarts the workflow on a six-hour schedule and defines the search input, destination sheet tab, scoring threshold, and priority keyword rules used downstream.",
+        "width": 416,
+        "height": 336,
         "color": 7
       },
       "id": "abade000-f206-58c1-a324-2fec4a2f51ca",
-      "name": "Section 1 — Schedule & Settings",
+      "name": "Sticky Note1",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
         0,
-        60
+        48
       ]
     },
     {
       "parameters": {
-        "content": "## 2. Extract & Deduplicate\nRuns the UnitBytes Apify Actor and skips records already processed in previous runs.",
-        "height": 380,
-        "width": 440,
+        "content": "## Scrape and deduplicate\n\nRuns the UnitBytes Apify actor through a synchronous HTTP request and removes records that have already been processed in previous executions.",
+        "width": 416,
+        "height": 320,
         "color": 7
       },
       "id": "785efaa2-5653-5ea9-800f-015124815f5e",
-      "name": "Section 2 — Extract & Deduplicate",
+      "name": "Sticky Note2",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        460,
-        60
+        448,
+        64
       ]
     },
     {
       "parameters": {
-        "content": "## 3. Clean, Score & Flatten\nNormalizes fields, parses numeric metrics, and calculates a 0–100 priority score.",
-        "height": 380,
-        "width": 440,
+        "content": "## Clean and map items\n\nNormalizes raw scraper fields, parses numeric metrics, calculates 0–100 priority scores, and maps the cleaned data into export-ready fields.",
+        "width": 416,
+        "height": 336,
         "color": 7
       },
       "id": "6a9d861a-53ac-5094-b18c-00c4c03cf5ab",
-      "name": "Section 3 — Clean, Score & Flatten",
+      "name": "Sticky Note3",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        920,
-        60
+        912,
+        48
       ]
     },
     {
       "parameters": {
-        "content": "## 4. Sheets, CSV & AI Co-Pilot\nLogs all rows to Sheets and CSV, enriches high-priority items with OpenAI, and alerts teams.",
-        "height": 740,
-        "width": 980,
+        "content": "## Export and prioritize\n\nBranches the mapped data into persistent outputs by logging to Google Sheets and creating a backup CSV, while filtering the stream down to high-priority items for AI enrichment.",
+        "width": 240,
+        "height": 816,
         "color": 7
       },
       "id": "d926c361-be81-5cb7-abef-51e121a15ff7",
-      "name": "Section 4 — Sheets, CSV & AI Co-Pilot",
+      "name": "Sticky Note4",
       "type": "n8n-nodes-base.stickyNote",
       "typeVersion": 1,
       "position": [
-        1380,
-        -80
+        1392,
+        -288
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Enrich with OpenAI\n\nUses OpenAI (`gpt-4o-mini`) to analyze high-priority records and merges the AI-generated headline, verdict, analysis, and draft with the original item fields.",
+        "width": 416,
+        "height": 336,
+        "color": 7
+      },
+      "id": "051efa23-73e3-5d38-a8d4-7ea6804f3399",
+      "name": "Sticky Note5",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1664,
+        176
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## Notify and route actions\n\nDelivers the enriched high-priority insights by posting formatted alerts to Slack and creating ready-to-send outreach drafts or instant alerts.",
+        "width": 240,
+        "height": 640,
+        "color": 7
+      },
+      "id": "c44b0493-27d2-50fc-8bfa-cec1a7c674b3",
+      "name": "Sticky Note6",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        2112,
+        0
       ]
     },
     {
@@ -93,7 +124,7 @@
         }
       },
       "id": "92f73336-f972-5f97-b62d-97a1c1703953",
-      "name": "Every 6 Hours",
+      "name": "When Every 6 Hours",
       "type": "n8n-nodes-base.scheduleTrigger",
       "typeVersion": 1.2,
       "position": [
@@ -134,7 +165,7 @@
         "options": {}
       },
       "id": "852edf0d-9c53-5f68-a1d9-92dd06c67f82",
-      "name": "1. Configure Search & Rules",
+      "name": "Set Search Parameters",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
@@ -171,7 +202,7 @@
         }
       },
       "id": "03ecf45b-c9c1-5a35-8289-338dc7f6f1af",
-      "name": "2. Run UnitBytes (google-trends-api)",
+      "name": "Post to Google Trends Scraper API: Interest, Regions & Queries API",
       "type": "n8n-nodes-base.httpRequest",
       "typeVersion": 4.2,
       "position": [
@@ -186,7 +217,7 @@
         "options": {}
       },
       "id": "27639845-3aa2-52f8-be5c-52682c3e76a3",
-      "name": "3. Skip Seen Records",
+      "name": "Deduplicate All Fields",
       "type": "n8n-nodes-base.removeDuplicates",
       "typeVersion": 2,
       "position": [
@@ -196,10 +227,10 @@
     },
     {
       "parameters": {
-        "jsCode": "// Normalize fields, parse numeric metrics, and score items for AI enrichment\nconst config = $('1. Configure Search & Rules').first().json;\nconst threshold = Number(config.minTrendValue !== undefined ? config.minTrendValue : 50);\nconst keywordFilter = String(config.priorityKeyword || '').trim().toLowerCase();\nconst primaryKeys = [\"keyword\", \"value\", \"geo\", \"scrape_type\"];\n\nreturn $input.all().map((item) => {\n  const raw = item.json || {};\n  const cleaned = { ...raw };\n\n  for (const k of primaryKeys) {\n    if (typeof cleaned[k] === 'string') {\n      cleaned[k] = cleaned[k].replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  const recordId = String(cleaned.keyword || cleaned.id || cleaned.url || '');\n  const titleText = String(cleaned.keyword || recordId).slice(0, 180);\n  const itemUrl = String(cleaned.url || '');\n  const rawMetric = cleaned.value || cleaned.volume || cleaned.volume_growth_pct || 0;\n  const numericValue = Number(String(rawMetric).replace(/[^0-9.-]/g, '')) || 0;\n\n  let priorityScore = 50;\n  let isHighPriority = false;\n\n  if (numericValue >= threshold) {\n    priorityScore = Math.min(100, Math.round(70 + Math.min(numericValue / Math.max(threshold, 1), 3) * 10));\n    isHighPriority = true;\n  }\n\n  if (keywordFilter && titleText.toLowerCase().includes(keywordFilter)) {\n    priorityScore = Math.min(100, priorityScore + 20);\n    isHighPriority = true;\n  }\n\n  return {\n    json: {\n      ...cleaned,\n      recordId,\n      titleText,\n      itemUrl,\n      numericValue,\n      priorityScore,\n      isHighPriority,\n      alertSummary: titleText + ' (Metric: ' + numericValue + ' | Score: ' + priorityScore + '/100)',\n      scrapedAt: new Date().toISOString(),\n    },\n  };\n});"
+        "jsCode": "// Normalize fields, parse numeric metrics, and score items for AI enrichment\nconst config = $('Set Search Parameters').first().json;\nconst threshold = Number(config.minTrendValue !== undefined ? config.minTrendValue : 50);\nconst keywordFilter = String(config.priorityKeyword || '').trim().toLowerCase();\nconst primaryKeys = [\"keyword\", \"value\", \"geo\", \"scrape_type\"];\n\nreturn $input.all().map((item) => {\n  const raw = item.json || {};\n  const cleaned = { ...raw };\n\n  for (const k of primaryKeys) {\n    if (typeof cleaned[k] === 'string') {\n      cleaned[k] = cleaned[k].replace(/\\s+/g, ' ').trim();\n    }\n  }\n\n  const recordId = String(cleaned.keyword || cleaned.id || cleaned.url || '');\n  const titleText = String(cleaned.keyword || recordId).slice(0, 180);\n  const itemUrl = String(cleaned.url || '');\n  const rawMetric = cleaned.value || cleaned.volume || cleaned.volume_growth_pct || 0;\n  const numericValue = Number(String(rawMetric).replace(/[^0-9.-]/g, '')) || 0;\n\n  let priorityScore = 50;\n  let isHighPriority = false;\n\n  if (numericValue >= threshold) {\n    priorityScore = Math.min(100, Math.round(70 + Math.min(numericValue / Math.max(threshold, 1), 3) * 10));\n    isHighPriority = true;\n  }\n\n  if (keywordFilter && titleText.toLowerCase().includes(keywordFilter)) {\n    priorityScore = Math.min(100, priorityScore + 20);\n    isHighPriority = true;\n  }\n\n  return {\n    json: {\n      ...cleaned,\n      recordId,\n      titleText,\n      itemUrl,\n      numericValue,\n      priorityScore,\n      isHighPriority,\n      alertSummary: titleText + ' (Metric: ' + numericValue + ' | Score: ' + priorityScore + '/100)',\n      scrapedAt: new Date().toISOString(),\n    },\n  };\n});"
       },
       "id": "c39ca3b8-1c70-525c-923d-43976a893e83",
-      "name": "4. Clean & Score Items",
+      "name": "Normalize and Score Items",
       "type": "n8n-nodes-base.code",
       "typeVersion": 2,
       "position": [
@@ -271,7 +302,7 @@
         "options": {}
       },
       "id": "fc82ba9c-17f2-5e0c-927e-28bdcd89f013",
-      "name": "5. Map Export Fields",
+      "name": "Prepare Export Fields",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
@@ -291,7 +322,7 @@
         "sheetName": {
           "__rl": true,
           "mode": "name",
-          "value": "={{ $('1. Configure Search & Rules').first().json.sheetTab }}"
+          "value": "={{ $('Set Search Parameters').first().json.sheetTab }}"
         },
         "columns": {
           "mappingMode": "defineBelow",
@@ -402,7 +433,7 @@
         }
       },
       "id": "b6b5616a-d1cb-5f18-bbef-1b0b7f261988",
-      "name": "6a. Log to Google Sheets",
+      "name": "Append Data to Sheets",
       "type": "n8n-nodes-base.googleSheets",
       "typeVersion": 4.7,
       "position": [
@@ -418,7 +449,7 @@
         }
       },
       "id": "596eaf6b-9439-5caa-9de5-a43c1d3073b9",
-      "name": "6b. Export Backup CSV",
+      "name": "Export to CSV File",
       "type": "n8n-nodes-base.convertToFile",
       "typeVersion": 1.1,
       "position": [
@@ -452,7 +483,7 @@
         "options": {}
       },
       "id": "3eda7b23-b988-5aba-81b6-350cd0a9ff96",
-      "name": "6c. Filter High-Priority Items",
+      "name": "Filter High-Priority Trends",
       "type": "n8n-nodes-base.filter",
       "typeVersion": 2.2,
       "position": [
@@ -494,12 +525,12 @@
         }
       },
       "id": "8981e7d8-1dec-5a60-924d-265c9f926fd7",
-      "name": "7. AI SEO & Content Brief Strategist",
+      "name": "AI SEO and Content Brief Strategist",
       "type": "@n8n/n8n-nodes-langchain.openAi",
       "typeVersion": 1.8,
       "position": [
-        1660,
-        360
+        1712,
+        368
       ]
     },
     {
@@ -509,43 +540,43 @@
             {
               "id": "8cd22914-f2e4-5a1b-a3aa-98a9b44fe842",
               "name": "recordId",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.recordId }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.recordId }}",
               "type": "string"
             },
             {
               "id": "ba460c7e-0fb7-5ca0-89be-0e9f7e0bad04",
               "name": "titleText",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.titleText }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.titleText }}",
               "type": "string"
             },
             {
               "id": "e86818aa-9e67-5a31-b251-050c1d39f737",
               "name": "itemUrl",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.itemUrl }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.itemUrl }}",
               "type": "string"
             },
             {
               "id": "8a934779-470c-5772-9de3-13f9ca5652a2",
               "name": "numericValue",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.numericValue }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.numericValue }}",
               "type": "number"
             },
             {
               "id": "e76a7582-e660-55ae-a0cd-24ff1c4a1918",
               "name": "priorityScore",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.priorityScore }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.priorityScore }}",
               "type": "number"
             },
             {
               "id": "9534025a-10ae-52a5-88cf-7c5c55b69f08",
               "name": "recipientEmail",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.primary_email || '' }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.primary_email || '' }}",
               "type": "string"
             },
             {
               "id": "672f163c-20e4-5906-aa65-78347e326004",
               "name": "aiHeadline",
-              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiHeadline || $('6c. Filter High-Priority Items').item.json.titleText }}",
+              "value": "={{ (typeof ($json.message && $json.message.content) === 'string' ? JSON.parse($json.message.content) : (($json.message && $json.message.content) || $json)).aiHeadline || $('Filter High-Priority Trends').item.json.titleText }}",
               "type": "string"
             },
             {
@@ -569,7 +600,7 @@
             {
               "id": "c88739a3-ca92-5bb6-92d9-f23a33e3fd1a",
               "name": "scrapedAt",
-              "value": "={{ $('6c. Filter High-Priority Items').item.json.scrapedAt }}",
+              "value": "={{ $('Filter High-Priority Trends').item.json.scrapedAt }}",
               "type": "string"
             }
           ]
@@ -577,12 +608,12 @@
         "options": {}
       },
       "id": "189a2375-8c1d-539b-b22c-02cbc9e7446c",
-      "name": "8. Merge AI Content Strategy Brief",
+      "name": "Merge Final Content Brief Fields",
       "type": "n8n-nodes-base.set",
       "typeVersion": 3.4,
       "position": [
-        1890,
-        360
+        1936,
+        368
       ]
     },
     {
@@ -609,12 +640,12 @@
         }
       },
       "id": "6a5ed453-97fb-5ac0-8afa-bae7869e7b29",
-      "name": "9a. Send Breakout Trend Brief to Slack",
+      "name": "Post Breakout Trend Brief to Slack",
       "type": "n8n-nodes-base.slack",
       "typeVersion": 2.3,
       "position": [
-        2120,
-        260
+        2160,
+        256
       ]
     },
     {
@@ -632,124 +663,124 @@
         }
       },
       "id": "137248e4-895a-5d1f-b518-37a9f4b9fd63",
-      "name": "9b. Draft Editorial Brief in Gmail",
+      "name": "Draft Editorial Brief in Gmail",
       "type": "n8n-nodes-base.gmail",
       "typeVersion": 2.1,
       "position": [
-        2120,
+        2160,
         480
       ]
     }
   ],
   "connections": {
-    "Every 6 Hours": {
+    "When Every 6 Hours": {
       "main": [
         [
           {
-            "node": "1. Configure Search & Rules",
+            "node": "Set Search Parameters",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "1. Configure Search & Rules": {
+    "Set Search Parameters": {
       "main": [
         [
           {
-            "node": "2. Run UnitBytes (google-trends-api)",
+            "node": "Post to Google Trends Scraper API: Interest, Regions & Queries API",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "2. Run UnitBytes (google-trends-api)": {
+    "Post to Google Trends Scraper API: Interest, Regions & Queries API": {
       "main": [
         [
           {
-            "node": "3. Skip Seen Records",
+            "node": "Deduplicate All Fields",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "3. Skip Seen Records": {
+    "Deduplicate All Fields": {
       "main": [
         [
           {
-            "node": "4. Clean & Score Items",
+            "node": "Normalize and Score Items",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "4. Clean & Score Items": {
+    "Normalize and Score Items": {
       "main": [
         [
           {
-            "node": "5. Map Export Fields",
+            "node": "Prepare Export Fields",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "5. Map Export Fields": {
+    "Prepare Export Fields": {
       "main": [
         [
           {
-            "node": "6a. Log to Google Sheets",
+            "node": "Append Data to Sheets",
             "type": "main",
             "index": 0
           },
           {
-            "node": "6b. Export Backup CSV",
+            "node": "Export to CSV File",
             "type": "main",
             "index": 0
           },
           {
-            "node": "6c. Filter High-Priority Items",
+            "node": "Filter High-Priority Trends",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "6c. Filter High-Priority Items": {
+    "Filter High-Priority Trends": {
       "main": [
         [
           {
-            "node": "7. AI SEO & Content Brief Strategist",
+            "node": "AI SEO and Content Brief Strategist",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "7. AI SEO & Content Brief Strategist": {
+    "AI SEO and Content Brief Strategist": {
       "main": [
         [
           {
-            "node": "8. Merge AI Content Strategy Brief",
+            "node": "Merge Final Content Brief Fields",
             "type": "main",
             "index": 0
           }
         ]
       ]
     },
-    "8. Merge AI Content Strategy Brief": {
+    "Merge Final Content Brief Fields": {
       "main": [
         [
           {
-            "node": "9a. Send Breakout Trend Brief to Slack",
+            "node": "Post Breakout Trend Brief to Slack",
             "type": "main",
             "index": 0
           },
           {
-            "node": "9b. Draft Editorial Brief in Gmail",
+            "node": "Draft Editorial Brief in Gmail",
             "type": "main",
             "index": 0
           }
